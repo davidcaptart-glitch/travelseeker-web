@@ -215,6 +215,35 @@
   .panel ol b { color: #fff; }
   .panel .note { margin: 16px 0 0; font-size: 14px; color: var(--muted); }
 
+  /* Vídeo */
+  .video-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 64px; align-items: center; }
+  .video-frame {
+    position: relative; justify-self: center; width: min(340px, 100%); aspect-ratio: 9 / 16;
+    border-radius: 34px; overflow: hidden; background: #0b0f1c;
+    border: 1px solid rgba(255,255,255,.14);
+    box-shadow: 0 40px 90px -30px rgba(0,0,0,.85), 0 0 0 8px rgba(255,255,255,.03), 0 0 80px -20px rgba(138,92,255,.55);
+  }
+  .video-frame video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .video-ctl {
+    position: absolute; right: 14px; bottom: 14px; z-index: 2;
+    width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2);
+    background: rgba(14,19,34,.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    color: #fff; display: grid; place-items: center; cursor: pointer;
+  }
+  .video-ctl svg { width: 20px; height: 20px; }
+  .video-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(255,255,255,.12); z-index: 2; }
+  .video-progress i { display: block; height: 100%; width: 0; background: var(--grad); }
+  .chapters { list-style: none; padding: 0; margin: 30px 0 32px; display: grid; gap: 10px; }
+  .chapters button {
+    width: 100%; display: flex; align-items: center; gap: 14px; text-align: left;
+    font: inherit; color: var(--soft); background: var(--card); border: 1px solid var(--card-line);
+    border-radius: 16px; padding: 14px 16px; cursor: pointer; transition: border-color .2s, background .2s, color .2s;
+  }
+  .chapters button:hover { border-color: rgba(138,92,255,.4); }
+  .chapters button.on { color: #fff; border-color: rgba(25,198,255,.45); background: linear-gradient(110deg, rgba(25,198,255,.1), rgba(214,58,217,.1)); }
+  .chapters time { flex: none; font-size: 13px; font-weight: 700; color: var(--cyan); background: rgba(25,198,255,.1); border-radius: 8px; padding: 3px 8px; font-variant-numeric: tabular-nums; }
+  .chapters b { color: inherit; font-weight: 700; }
+
   /* Contacto */
   .contact { display: grid; grid-template-columns: .85fr 1.15fr; gap: 48px; align-items: start; }
   .contact-points { display: grid; gap: 14px; margin-top: 28px; }
@@ -260,7 +289,9 @@
 
   /* ---------- Responsive ---------- */
   @media (max-width: 960px) {
-    .hero-grid, .install-box, .contact { grid-template-columns: 1fr; }
+    .hero-grid, .install-box, .contact, .video-grid { grid-template-columns: 1fr; }
+    .video-grid { gap: 40px; }
+    .video-grid > div:last-child { text-align: left; }
     .hero { padding-top: 48px; }
     .phone-stage { margin-top: 12px; }
     .grid-3, .steps { grid-template-columns: 1fr 1fr; }
@@ -276,6 +307,8 @@
     .phone { width: 270px; height: 560px; }
     .notif { left: 50%; margin-left: -150px; width: 300px; top: 90px; animation: none; }
     .install-box { padding: 32px 20px; border-radius: 24px; }
+    .video-frame { width: min(290px, 100%); border-radius: 28px; }
+    .chapters button { padding: 12px 14px; font-size: 15px; }
     form { padding: 22px; }
     .tabs { width: 100%; }
     .tab { flex: 1; padding: 9px 8px; }
@@ -315,7 +348,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
             Descargar la app
           </a>
-          <a class="btn btn-ghost" href="#como-funciona">Ver cómo funciona</a>
+          <a class="btn btn-ghost" href="#video">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+            Ver el vídeo · 30 s
+          </a>
         </div>
         <div class="trust">
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Gratis</span>
@@ -353,6 +389,39 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VÍDEO -->
+  <section id="video">
+    <div class="glow" style="width:520px;height:520px;background:var(--blue);top:15%;left:-200px;opacity:.16"></div>
+    <div class="wrap video-grid" style="position:relative;z-index:1">
+      <div class="video-frame reveal">
+        <video id="demo" muted loop playsinline autoplay preload="auto" poster="assets/demo-poster.jpg" aria-label="Vídeo de 30 segundos que muestra cómo funciona TravelSeeker">
+          <source src="assets/demo.mp4" type="video/mp4">
+        </video>
+        <button class="video-ctl" id="demo-ctl" type="button" aria-label="Reproducir vídeo">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="i-play"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor" class="i-pause" style="display:none"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+        </button>
+        <div class="video-progress" aria-hidden="true"><i id="demo-bar"></i></div>
+      </div>
+      <div class="reveal">
+        <span class="eyebrow">Míralo en 30 segundos</span>
+        <h2>Así trabaja TravelSeeker <span class="grad-text">mientras tú vives</span></h2>
+        <p class="sub">Del «llevo horas buscando» al «¡viaje encontrado!», sin mover un dedo. Pulsa cualquier parte para saltar a ella.</p>
+        <ol class="chapters" id="chapters">
+          <li><button type="button" data-t="0"><time>0:00</time><span><b>El problema:</b> horas probando fechas y precios.</span></button></li>
+          <li><button type="button" data-t="7"><time>0:07</time><span><b>Paso 1 · Crea tu alerta:</b> origen, destino, días libres y presupuesto.</span></button></li>
+          <li><button type="button" data-t="12"><time>0:12</time><span><b>Paso 2 · Busca sin parar:</b> vuelos y alojamiento, día y noche.</span></button></li>
+          <li><button type="button" data-t="17"><time>0:17</time><span><b>Paso 3 · Te avisa al momento:</b> solo cuando encaja contigo.</span></button></li>
+          <li><button type="button" data-t="21"><time>0:21</time><span><b>¿Es buen precio?</b> Te lo dice, y cómo llegar al hotel.</span></button></li>
+        </ol>
+        <a class="btn btn-primary" href="#instalar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          Quiero probarla gratis
+        </a>
       </div>
     </div>
   </section>
@@ -604,6 +673,48 @@
       }), { threshold: 0.12 })
     : null;
   document.querySelectorAll(".reveal").forEach((el) => io ? io.observe(el) : el.classList.add("in"));
+
+  // Vídeo: se reproduce solo (sin sonido) al verse, con capítulos que saltan a cada parte
+  const video = document.getElementById("demo");
+  const ctl = document.getElementById("demo-ctl");
+  const bar = document.getElementById("demo-bar");
+  const chapterBtns = [...document.querySelectorAll("#chapters button")];
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let userPaused = false;
+  function syncCtl() {
+    const playing = !video.paused;
+    ctl.querySelector(".i-play").style.display = playing ? "none" : "";
+    ctl.querySelector(".i-pause").style.display = playing ? "" : "none";
+    ctl.setAttribute("aria-label", playing ? "Pausar vídeo" : "Reproducir vídeo");
+  }
+  video.addEventListener("play", syncCtl);
+  video.addEventListener("pause", syncCtl);
+  ctl.addEventListener("click", () => {
+    if (video.paused) { userPaused = false; video.play().catch(() => {}); }
+    else { userPaused = true; video.pause(); }
+  });
+  video.addEventListener("click", () => ctl.click());
+  video.addEventListener("timeupdate", () => {
+    if (video.duration) bar.style.width = (video.currentTime / video.duration) * 100 + "%";
+    const t = video.currentTime;
+    chapterBtns.forEach((b, i) => {
+      const next = chapterBtns[i + 1];
+      b.classList.toggle("on", t >= +b.dataset.t && (!next || t < +next.dataset.t));
+    });
+  });
+  chapterBtns.forEach((b) => b.addEventListener("click", () => {
+    video.currentTime = +b.dataset.t;
+    userPaused = false;
+    video.play().catch(() => {});
+    if (window.innerWidth < 960) video.scrollIntoView({ behavior: "smooth", block: "center" });
+  }));
+  if (reduceMotion) { video.removeAttribute("autoplay"); video.pause(); userPaused = true; }
+  if ("IntersectionObserver" in window && !reduceMotion) {
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !userPaused) video.play().catch(() => {});
+      else if (!e.isIntersecting) video.pause();
+    }, { threshold: 0.5 }).observe(video);
+  }
 
   // Formulario de contacto
   const form = document.getElementById("contact-form");
